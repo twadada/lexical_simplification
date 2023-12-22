@@ -2,17 +2,16 @@
 
 ## Sentence retrieval
 ```
-N_words=1
 MWEfile=wordlist
 monofile=monolingual_file
-folder=Folder
+save=savefile_path
 mkdir $folder
-python extract_sentence.py -MWEfile ${MWEfile} -monofile ${monofile} -N_words ${N_words} -folder $folder
+python extract_sentence.py -MWEfile ${MWEfile} -monofile ${monofile} -N_words 1 -save $save
 ```
-Remove duplicated
+Remove long sentences
 ```
 model=bert-large-uncased
-silver_sent=lex_mturk_tgtwords/lex_mturk_tgtwords.txt_silversent.pkl
+silver_sent=${savefile_path}.pkl
 python remove_duplicates.py -silver_sent ${silver_sent} -model ${model}
 
 ```
