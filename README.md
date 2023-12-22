@@ -1,23 +1,30 @@
 # lexical_simplification
 
 ## Sentence retrieval
-
+```
 N_words=1
-MWEfile=tonikaku
-monofile=/lt/scratch/twada/OSCAR/ja_dedup_jumanpp_rc_tok
+MWEfile=wordlist
+monofile=monolingual_file
 folder=Folder
 mkdir $folder
 python extract_sentence.py -MWEfile ${MWEfile} -monofile ${monofile} -N_words ${N_words} -folder $folder
+```
+Remove duplicated
+```
+model=bert-large-uncased
+silver_sent=lex_mturk_tgtwords/lex_mturk_tgtwords.txt_silversent.pkl
+python remove_duplicates.py -silver_sent ${silver_sent} -model ${model}
 
+```
 ## Sentence clustering
-
+```
 sent=/lt/scratch/twada/lexsub_decontextualised/tsar2022_en_tgtwords/tsar2022_en_tgtwords.txt_silversent_removed.pkl
 clustering=kmeans4
 echo $clustering
 N_sample=300
 folder=$(basename "$model")_${n_mask}_MASK_${clustering}_vec_NEW_nofilter
 CUDA_VISIBLE_DEVICES=6 python clustering.py -max_tokens 2048  -clustering ${clustering} -N_sample ${N_sample}  -folder $folder -model ${model} -silver_sent ${sent} -n_mask 0 -mask_opt two
-
+```
 ## Generate candidates based on the target context
 ```
 model=neuralmind/bert-large-portuguese-cased
