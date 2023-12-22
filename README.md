@@ -11,18 +11,17 @@ python extract_sentence.py -MWEfile ${MWEfile} -monofile ${monofile} -N_words 1 
 Remove long sentences
 ```
 model=bert-large-uncased
-silver_sent=${savefile_path}.pkl
-python remove_duplicates.py -silver_sent ${silver_sent} -model ${model}
-
+input=${savefile_path}.pkl
+output=${savefile_path}_removed.pkl
+python length_filter.py -input ${silver_sent} -model ${model}  -out ${output}
 ```
 ## Sentence clustering
 ```
-sent=/lt/scratch/twada/lexsub_decontextualised/tsar2022_en_tgtwords/tsar2022_en_tgtwords.txt_silversent_removed.pkl
+sent=${output}
 clustering=kmeans4
-echo $clustering
 N_sample=300
-folder=$(basename "$model")_${n_mask}_MASK_${clustering}_vec_NEW_nofilter
-CUDA_VISIBLE_DEVICES=6 python clustering.py -max_tokens 2048  -clustering ${clustering} -N_sample ${N_sample}  -folder $folder -model ${model} -silver_sent ${sent} -n_mask 0 -mask_opt two
+cluster_folder=Folder_name
+CUDA_VISIBLE_DEVICES=0 python clustering.py -max_tokens 2048  -clustering ${clustering} -N_sample ${N_sample}  -folder ${cluster_folder} -model ${model} -silver_sent ${sent} -n_mask 0 -mask_opt two
 ```
 ## Generate candidates based on the target context
 ```
